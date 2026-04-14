@@ -21,5 +21,5 @@ module "lambda_function" {
 module "eventbridge_rule" {
   source        = "./modules/eventbridge"
   lambda_arn    = module.lambda_function.lambda_arn
-  schedule_rate = "rate(2 minutes)"
+  schedule_rate = "rate(12 hours)"
 }
