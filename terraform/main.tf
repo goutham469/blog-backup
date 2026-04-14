@@ -12,7 +12,7 @@ module "s3_bucket" {
 module "lambda_function" {
   source         = "./modules/lambda"
   function_name  = var.lambda_function_name
-  api_url        = "https://example.com/api/blog-posts"
+  api_url        = "https://myspace-server.iamgoutham.in/public/blogs"
   s3_bucket_name = module.s3_bucket.bucket_name
 }
 
