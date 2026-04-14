@@ -1,56 +1,49 @@
 name: Provision and Deploy Lambda Function
-
 on:
   push:
-    branches:
-      - main
-      - master
+    branches: [ main, master ]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-      # Step 1: Checkout Code
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      # Step 2: Install AWS CLI and Configure Terraform
-      - name: Configure AWS CLI
-        uses: aws-actions/configure-aws-cli@v2
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
 
       - name: Install Terraform
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.4.5
 
-      # Step 3: Initialize Terraform
       - name: Terraform Init
         run: terraform init
-        working-directory: terraform/ # Path to your Terraform scripts
+        working-directory: terraform/
 
-      # Step 4: Plan Terraform Changes
       - name: Terraform Plan
         run: terraform plan -out=tfplan
-        working-directory: terraform/ # Path to your Terraform scripts
+        working-directory: terraform/
 
-      # Step 5: Apply Terraform Changes
       - name: Terraform Apply
-        run: terraform apply tfplan
-        working-directory: terraform/ # Path to your Terraform scripts
+        run: terraform apply -auto-approve tfplan
+        working-directory: terraform/
 
-      # Step 6: Install Lambda Dependencies
       - name: Install Python Dependencies
-        run: pip install -r lambda/requirements.txt
+        run: pip install -r lambda/requirements.txt -t lambda/package
 
-      # Step 7: Package and Deploy Lambda
       - name: Package Lambda
         run: |
-          zip -r lambda.zip lambda/
+          cd lambda
+          cp -r src/* package/   # adjust if your code isn't in lambda/src
+          cd package
+          zip -r ../../lambda.zip .
+          cd ../..
           aws lambda update-function-code \
             --function-name blog-backup-lambda \
             --zip-file fileb://lambda.zip
