@@ -72,6 +72,9 @@ resource "aws_lambda_function" "backup_lambda" {
   role          = aws_iam_role.lambda_role.arn
   handler       = "handler.lambda_handler"
 
+  timeout = 60
+  memory_size = 256
+
   environment {
     variables = {
       API_URL    = var.api_url
