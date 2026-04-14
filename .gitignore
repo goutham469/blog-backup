@@ -1,0 +1,51 @@
+# Terraform state files
+*.tfstate
+*.tfstate.backup
+
+# Terraform lock files
+*.terraform.lock.hcl
+
+# Terraform directories
+.terraform/
+.terraform/*
+
+# Node modules (if using Node.js)
+node_modules/
+
+# Python virtual environments
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env/
+
+# Compiled Python files
+*.py[cod]
+
+# Lambda deployment artifacts
+lambda.zip
+
+# Log files
+*.log
+
+# Temporary files created while editing
+.DS_Store
+Thumbs.db
+*.bak
+*.swp
+
+# AWS credentials (just in case, for local overrides)
+.aws/
+
+# IDE/project-specific files
+.vscode/
+.idea/
+*.iml
+
+# GitHub workflows temporary files
+.github/folder1  # Replace with any temporary or unnecessary GitHub Actions folders.
+
+# Ignore debug files or temp files from Terraform plan/apply locally
+*.tfplan
+
+*.terraform.lock.hcl
