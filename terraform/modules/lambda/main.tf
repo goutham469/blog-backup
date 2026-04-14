@@ -42,6 +42,24 @@ resource "aws_iam_role_policy_attachment" "lambda_policy_attachment" {
   policy_arn = aws_iam_policy.lambda_policy.arn
 }
 
+# begin : Archive the lambda function code
+terraform {
+  required_providers {
+    archive = {
+      source  = "hashicorp/archive"
+      version = "~> 2.6"
+    }
+  }
+}
+
+data "archive_file" "lambda_zip" {
+  type        = "zip"
+  source_dir  = "${path.root}/../lambda/build"
+  output_path = "${path.module}/lambda.zip"
+}
+
+# end of lambda funtion code zipping tags
+
 resource "aws_lambda_function" "backup_lambda" {
   function_name = var.function_name
   runtime       = "python3.9"
