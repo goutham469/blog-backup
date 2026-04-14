@@ -16,6 +16,7 @@ module "lambda_function" {
   s3_bucket_name = module.s3_bucket.bucket_name
 }
 
+
 # Include the EventBridge module
 module "eventbridge_rule" {
   source        = "./modules/eventbridge"
