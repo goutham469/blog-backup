@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "us-east-1" # Change this to your AWS region
+  region = var.aws_region # Change this to your AWS region
 }
 
 # Include the S3 module

@@ -55,8 +55,8 @@ resource "aws_lambda_function" "backup_lambda" {
     }
   }
 
-  source_code_hash = filebase64sha256("lambda.zip")
-  filename         = "lambda.zip"
+  filename         = data.archive_file.lambda_zip.output_path
+  source_code_hash = data.archive_file.lambda_zip.output_base64sha256
 
   tags = {
     Name = "Blog Backup Lambda"

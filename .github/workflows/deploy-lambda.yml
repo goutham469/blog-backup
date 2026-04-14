@@ -1,4 +1,5 @@
 name: Provision and Deploy Lambda Function
+
 on:
   push:
     branches: [ main, master ]
@@ -22,6 +23,13 @@ jobs:
         with:
           terraform_version: 1.4.5
 
+      - name: Build Lambda (deps + handler)
+        run: |
+          rm -rf lambda/build
+          mkdir -p lambda/build
+          pip install -r lambda/requirements.txt -t lambda/build
+          cp lambda/handler.py lambda/build/handler.py
+
       - name: Terraform Init
         run: terraform init
         working-directory: terraform/
@@ -33,17 +41,3 @@ jobs:
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
         working-directory: terraform/
-
-      - name: Install Python Dependencies
-        run: pip install -r lambda/requirements.txt -t lambda/package
-
-      - name: Package Lambda
-        run: |
-          cd lambda
-          cp -r src/* package/   # adjust if your code isn't in lambda/src
-          cd package
-          zip -r ../../lambda.zip .
-          cd ../..
-          aws lambda update-function-code \
-            --function-name blog-backup-lambda \
-            --zip-file fileb://lambda.zip
